@@ -34,5 +34,5 @@ The tutorial also shows the recognition performance of the architectures when id
 ## Citation
 Bibtext
 
-##License
+## License
 [BSD 3-Clause License](LICENSE)
