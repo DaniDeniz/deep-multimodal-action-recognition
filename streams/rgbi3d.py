@@ -10,6 +10,7 @@ https://github.com/dlpbc/keras-kinetics-i3d/blob/master/i3d_inception.py
 from tensorflow.keras import layers
 from tensorflow.keras import backend as K
 from tensorflow.keras.models import Model
+from tensorflow.keras.regularizers import l2
 
 
 def conv3d_bn(x,
@@ -22,8 +23,9 @@ def conv3d_bn(x,
               use_bias = False,
               use_activation_fn = True,
               use_bn = True,
-              name=None):
-
+              name=None, 
+              regularizer = None):
+  
     if name is not None:
         bn_name = name + '_bn'
         conv_name = name + '_conv'
@@ -31,11 +33,12 @@ def conv3d_bn(x,
         bn_name = None
         conv_name = None
 
-    x = layers.Conv3D(
+    x = Conv3D(
         filters, (num_frames, num_row, num_col),
         strides=strides,
         padding=padding,
         use_bias=use_bias,
+        kernel_regularizer=regularizer,
         name=conv_name)(x)
 
     if use_bn:
@@ -43,13 +46,12 @@ def conv3d_bn(x,
             bn_axis = 1
         else:
             bn_axis = 4
-        x = layers.BatchNormalization(axis=bn_axis, scale=False, name=bn_name)(x)
+        x = BatchNormalization(axis=bn_axis, scale=False, name=bn_name)(x)
 
     if use_activation_fn:
-        x = layers.Activation('relu', name=name)(x)
+        x = Activation('relu', name=name)(x)
 
     return x
-
 
 def rgbi3d(include_top=True,
            weights=None,
@@ -255,7 +257,7 @@ def rgbi3d(include_top=True,
         x = layers.Dropout(dropout_prob, name="dropout")(x)
 
         x = conv3d_bn(x, classes, 1, 1, 1, padding='same',
-                use_bias=True, use_activation_fn=False, use_bn=False, name='Conv3d_6a_1x1')
+                use_bias=True, use_activation_fn=False, use_bn=False, name='Conv3d_6a_1x1', regularizer=l2(1e-7))
 
         num_frames_remaining = int(x.shape[1])
         x = layers.Reshape((num_frames_remaining, classes), name="reshape")(x)
