@@ -2,7 +2,7 @@
 Deep multimodal action recognition for Habit Tracking from Video and Heart Rate (pulses) information
 
 This repository is from the work: *Deep multimodal habit tracking system: A user-adaptive approach for low-power
-embedded systems* published at *Journal of Signal Processing Systems* [1]().
+embedded systems* published at *Journal of Signal Processing Systems* [[1]]().
 
 Here, we provide the Deep Learning models architectures using the Tensorflow keras framework and the weights of the
 trained models.
